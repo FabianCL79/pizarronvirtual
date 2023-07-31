@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+
+    <div>
+      <div>
+        <canvas id="sheet" width="800" height="500"></canvas>
+      </div>
+    </div>
+
+    <div>
+      <div>
+        <button class="round-button black selected"onclick="selectColor('black')">Lapiz</button>
+      </div>
+      <div>
+        <button class="round-button white"onclick="selectColor('white')">Borrar</button>
+      </div>
+    </div>
+
+  </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+  <script src="/javascripts/draw.js"></script>
+</html>
