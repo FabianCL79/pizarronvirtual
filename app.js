@@ -22,7 +22,64 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+/////////////////////////////////////////////////////////
+// Middleware to set the initial value of 'loggedIn' cookie to 'false'
+app.use((req, res, next) => {
+  if (req.cookies.loggedIn === undefined) {
+    res.cookie('loggedIn', 'false');
+  }
+  next();
+});
+/////////////////////////////////////////////////////////
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+/////////////////
+
+// Route to handle login
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+
+  // Implement your login logic here
+  // Check the credentials against the backend or a user database
+  // If the login is successful, set the loggedIn state to true
+  const loginSuccessful = true; // Replace this with your actual login logic
+
+  if (loginSuccessful) {
+    res.cookie('loggedIn', 'true');
+    // Redirect to the home page (where the canvas is rendered)
+    //res.render('index', { loggedIn: req.cookies.loggedIn === 'true', title: 'App' });
+    //res.redirect('/');
+    //res.json({ success: true });
+  } else {
+    res.status(401).json({ error: 'Invalid credentials' });
+  }
+  // Redirect to the home page (where the canvas is rendered)
+  res.redirect('/');
+});
+
+// Route to handle logout
+app.post('/logout', (req, res) => {
+  // Clear the 'loggedIn' cookie to log out the user
+  res.clearCookie('loggedIn');
+  // Redirect to the home page (where the canvas is rendered)
+  res.redirect('/');
+});
+
+// Route to render the index.ejs template
+app.get('/', (req, res) => {
+  // Pass the 'loggedIn' value to the template during rendering
+  res.render('index', { loggedIn: req.cookies.loggedIn === 'true', title: 'App' });
+});
+
+
+// ... Other code ...
+
+//////////////////
+
+
+
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

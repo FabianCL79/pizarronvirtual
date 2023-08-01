@@ -4,8 +4,45 @@
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
   </head>
-  <body>
 
+  <body>
+    <div>
+      <% if (!loggedIn) { %>
+        <form id="loginForm" action="/login" method="POST">
+          <input type="text" name="username" placeholder="Username" />
+          <input type="password" name="password" placeholder="Password" />
+          <button type="submit">Login</button>
+        </form>
+        <% } else { %>
+          <div>
+            <div>
+              <canvas id="sheet" width="800" height="500"></canvas>
+            </div>
+          </div>
+  
+          <div>
+            <div>
+              <button class="round-button black selected" onclick="selectColor('black')">
+                Lapiz
+              </button>
+            </div>
+            <div>
+              <button class="round-button white" onclick="selectColor('white')">
+                Borrar
+              </button>
+            </div>
+          </div>
+
+          <!-- Add the logout button -->
+          <form id="logoutForm" action="/logout" method="POST">
+            <button class="round-button" type="submit">Salir</button>
+          </form>
+
+          <% } %>
+    </div>
+  </body>
+<!--
+  <body>
     <div>
       <div>
         <canvas id="sheet" width="800" height="500"></canvas>
@@ -20,8 +57,27 @@
         <button class="round-button white"onclick="selectColor('white')">Borrar</button>
       </div>
     </div>
-
   </body>
+  -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
   <script src="/javascripts/draw.js"></script>
+  <script>
+    // Client-side script to handle logout form submission
+    document.getElementById('logoutForm').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      fetch('/logout', {
+        method: 'POST',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // On successful logout, reload the page to show the login form
+            location.reload();
+          }
+        })
+        .catch((error) => {
+          console.error('Error during logout:', error);
+        });
+    });
+  </script>
 </html>

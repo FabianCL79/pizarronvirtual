@@ -42,17 +42,19 @@ window.onload = function () {
         if (!from_server)
             socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color }));
 
-        context.beginPath();
-        context.strokeStyle = color;
-        if (color == 'white') context.lineWidth = 10;
-        else context.lineWidth = 5;
-        context.lineCap = 'round'
-        context.moveTo(x1, y1);
-        context.lineTo(x2, y2);
-        context.stroke();
-        context.closePath();
+        if (color === 'white') {
+            context.clearRect(x1 - 5, y1 - 5, 15, 15);
+        } else {
+            context.beginPath();
+            context.strokeStyle = color;
+            context.lineWidth = 5;
+            context.lineCap = 'round'
+            context.moveTo(x1, y1);
+            context.lineTo(x2, y2);
+            context.stroke();
+            context.closePath();
+        }
     }
-
 }
 
 let selected_color = 'black';
