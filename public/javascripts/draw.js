@@ -30,6 +30,42 @@ window.onload = function () {
         }
     });
 
+
+
+
+
+
+    canvas.addEventListener('touchstart', function (e) {
+        e.preventDefault();
+        x = e.offsetX;
+        y = e.offsetY;
+        isDrawing = true;
+    });
+
+    window.addEventListener('touchend', e => {
+        e.preventDefault();
+        if (isDrawing === true) {
+            drawLine(context, x, y, e.offsetX, e.offsetY);
+            x = 0;
+            y = 0;
+            isDrawing = false;
+        }
+    });
+
+    canvas.addEventListener('touchmove', e => {
+        e.preventDefault();
+        if (isDrawing === true) {
+            drawLine(context, x, y, e.offsetX, e.offsetY);
+            x = e.offsetX;
+            y = e.offsetY;
+        }
+    });
+
+
+
+
+
+
     var socket = io();
 
     socket.on('update_canvas', function (data) {
@@ -65,6 +101,29 @@ function selectColor(color) {
 }
 
 
+
+
+
+
+
+
+
+
+document.body.addEventListener("touchstart", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, false);
+document.body.addEventListener("touchend", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, false);
+document.body.addEventListener("touchmove", function (e) {
+    if (e.target == canvas) {
+        e.preventDefault();
+    }
+}, false);
 
 
 
