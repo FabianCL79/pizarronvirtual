@@ -39,11 +39,6 @@ window.onload = function () {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
     }
-    // Update the canvas dimensions only when the orientation changes
-    window.addEventListener('orientationchange', function () {
-        clearTimeout(resizeTimeout);
-        resizeTimeout = setTimeout(updateCanvasDimensions, 500);
-    });
 
     // Call the function once on window load to set the initial canvas dimensions
     updateCanvasDimensions();
