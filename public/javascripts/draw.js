@@ -32,13 +32,17 @@ window.onload = function () {
 
     //Rotation
     /////////////////////////////////////////////////
+
     function updateCanvasDimensions() {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
     }
+    // Update the canvas dimensions when the orientation changes or scrolling occurs
     window.addEventListener('orientationchange', updateCanvasDimensions);
-    updateCanvasDimensions();
+    window.addEventListener('scroll', updateCanvasDimensions);
 
+    // Call the function once on window load to set the initial canvas dimensions
+    updateCanvasDimensions();
 
     //TouchScreen
     ////////////////////////////////////////////////////////////////
@@ -46,6 +50,36 @@ window.onload = function () {
     canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', handleTouchEnd);
 
+    function handleTouchStart(e) {
+        e.preventDefault();
+        var touch = e.touches[0];
+        x = touch.clientX - touch.target.offsetLeft + window.scrollX;
+        y = touch.clientY - touch.target.offsetTop + window.scrollY;
+        isDrawing = true;
+    }
+
+    function handleTouchMove(e) {
+        if (isDrawing === true) {
+            e.preventDefault();
+            var touch = e.touches[0];
+            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft + window.scrollX, touch.clientY - touch.target.offsetTop + window.scrollY);
+            x = touch.clientX - touch.target.offsetLeft + window.scrollX;
+            y = touch.clientY - touch.target.offsetTop + window.scrollY;
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (isDrawing === true) {
+            e.preventDefault();
+            var touch = e.changedTouches[0];
+            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft + window.scrollX, touch.clientY - touch.target.offsetTop + window.scrollY);
+            x = 0;
+            y = 0;
+            isDrawing = false;
+        }
+    }
+
+    /*
     function handleTouchStart(e) {
         e.preventDefault();
         var touch = e.touches[0];
@@ -74,6 +108,7 @@ window.onload = function () {
             isDrawing = false;
         }
     }
+    */
     //////////////////////////////////////////////////
 
 
