@@ -44,16 +44,23 @@ app.post('/login', (req, res) => {
   // Implement your login logic here
   // Check the credentials against the backend or a user database
   // If the login is successful, set the loggedIn state to true
-  const loginSuccessful = true; // Replace this with your actual login logic
-
+  var loginSuccessful = true; // Replace this with your actual login logic
+  if (username === "user" && password === "pass") {
+    loginSuccessful = true;
+  } else {
+    loginSuccessful = false;
+  }
   if (loginSuccessful) {
     res.cookie('loggedIn', 'true');
     // Redirect to the home page (where the canvas is rendered)
     //res.render('index', { loggedIn: req.cookies.loggedIn === 'true', title: 'App' });
     //res.redirect('/');
     //res.json({ success: true });
+    res.redirect(`/?username=${encodeURIComponent(username)}`);
   } else {
-    res.status(401).json({ error: 'Invalid credentials' });
+    res.cookie('loggedIn', 'false');
+    res.redirect('/');
+    //res.status(401).json({ error: 'Invalid credentials' });
   }
   // Redirect to the home page (where the canvas is rendered)
   res.redirect('/');

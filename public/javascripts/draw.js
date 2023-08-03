@@ -31,38 +31,40 @@ window.onload = function () {
     });
 
 
+    /////////////////////////////////////////////////
+    canvas.addEventListener('touchstart', handleTouchStart);
+    canvas.addEventListener('touchmove', handleTouchMove);
+    canvas.addEventListener('touchend', handleTouchEnd);
 
-
-
-
-    canvas.addEventListener('touchstart', function (e) {
+    function handleTouchStart(e) {
         e.preventDefault();
-        x = e.offsetX;
-        y = e.offsetY;
+        var touch = e.touches[0];
+        x = touch.clientX - touch.target.offsetLeft;
+        y = touch.clientY - touch.target.offsetTop;
         isDrawing = true;
-    });
+    }
 
-    window.addEventListener('touchend', e => {
-        e.preventDefault();
+    function handleTouchMove(e) {
         if (isDrawing === true) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
+            e.preventDefault();
+            var touch = e.touches[0];
+            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft, touch.clientY - touch.target.offsetTop);
+            x = touch.clientX - touch.target.offsetLeft;
+            y = touch.clientY - touch.target.offsetTop;
+        }
+    }
+
+    function handleTouchEnd(e) {
+        if (isDrawing === true) {
+            e.preventDefault();
+            var touch = e.changedTouches[0];
+            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft, touch.clientY - touch.target.offsetTop);
             x = 0;
             y = 0;
             isDrawing = false;
         }
-    });
-
-    canvas.addEventListener('touchmove', e => {
-        e.preventDefault();
-        if (isDrawing === true) {
-            drawLine(context, x, y, e.offsetX, e.offsetY);
-            x = e.offsetX;
-            y = e.offsetY;
-        }
-    });
-
-
-
+    }
+    //////////////////////////////////////////////////
 
 
 
@@ -103,11 +105,7 @@ function selectColor(color) {
 
 
 
-
-
-
-
-
+/*
 
 document.body.addEventListener("touchstart", function (e) {
     if (e.target == canvas) {
@@ -124,8 +122,5 @@ document.body.addEventListener("touchmove", function (e) {
         e.preventDefault();
     }
 }, false);
-
-
-
-
+*/
 
