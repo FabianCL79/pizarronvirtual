@@ -4,6 +4,8 @@ window.onload = function () {
     let x = 0;
     let y = 0;
 
+    let resizeTimeout;
+
     const canvas = document.getElementById('sheet');
     var context = canvas.getContext('2d');
 
@@ -38,7 +40,10 @@ window.onload = function () {
         canvas.height = canvas.clientHeight;
     }
     // Update the canvas dimensions only when the orientation changes
-    window.addEventListener('orientationchange', updateCanvasDimensions);
+    window.addEventListener('orientationchange', function () {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(updateCanvasDimensions, 500);
+    });
 
     // Call the function once on window load to set the initial canvas dimensions
     updateCanvasDimensions();
