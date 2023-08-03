@@ -30,8 +30,18 @@ window.onload = function () {
         }
     });
 
-
+    //Rotation
     /////////////////////////////////////////////////
+    function updateCanvasDimensions() {
+        canvas.width = canvas.clientWidth;
+        canvas.height = canvas.clientHeight;
+    }
+    window.addEventListener('orientationchange', updateCanvasDimensions);
+    updateCanvasDimensions();
+
+
+    //TouchScreen
+    ////////////////////////////////////////////////////////////////
     canvas.addEventListener('touchstart', handleTouchStart);
     canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', handleTouchEnd);
