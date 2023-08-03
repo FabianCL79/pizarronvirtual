@@ -4,8 +4,6 @@ window.onload = function () {
     let x = 0;
     let y = 0;
 
-    let resizeTimeout;
-
     const canvas = document.getElementById('sheet');
     var context = canvas.getContext('2d');
 
@@ -32,9 +30,6 @@ window.onload = function () {
         }
     });
 
-    //Rotation
-    /////////////////////////////////////////////////
-
     function updateCanvasDimensions() {
         canvas.width = canvas.clientWidth;
         canvas.height = canvas.clientHeight;
@@ -44,7 +39,6 @@ window.onload = function () {
     updateCanvasDimensions();
 
     //TouchScreen
-    ////////////////////////////////////////////////////////////////
     canvas.addEventListener('touchstart', handleTouchStart);
     canvas.addEventListener('touchmove', handleTouchMove);
     canvas.addEventListener('touchend', handleTouchEnd);
@@ -78,40 +72,6 @@ window.onload = function () {
         }
     }
 
-    /*
-    function handleTouchStart(e) {
-        e.preventDefault();
-        var touch = e.touches[0];
-        x = touch.clientX - touch.target.offsetLeft;
-        y = touch.clientY - touch.target.offsetTop;
-        isDrawing = true;
-    }
-
-    function handleTouchMove(e) {
-        if (isDrawing === true) {
-            e.preventDefault();
-            var touch = e.touches[0];
-            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft, touch.clientY - touch.target.offsetTop);
-            x = touch.clientX - touch.target.offsetLeft;
-            y = touch.clientY - touch.target.offsetTop;
-        }
-    }
-
-    function handleTouchEnd(e) {
-        if (isDrawing === true) {
-            e.preventDefault();
-            var touch = e.changedTouches[0];
-            drawLine(context, x, y, touch.clientX - touch.target.offsetLeft, touch.clientY - touch.target.offsetTop);
-            x = 0;
-            y = 0;
-            isDrawing = false;
-        }
-    }
-    */
-    //////////////////////////////////////////////////
-
-
-
     var socket = io();
 
     socket.on('update_canvas', function (data) {
@@ -120,51 +80,103 @@ window.onload = function () {
     });
 
     function drawLine(context, x1, y1, x2, y2, color = selected_color, from_server = false) {
-
         if (!from_server)
             socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color }));
 
-        if (color === 'white') {
+        if (color === 'borrar') {
             context.clearRect(x1 - 5, y1 - 5, 15, 15);
         } else {
-            context.beginPath();
-            context.strokeStyle = color;
-            context.lineWidth = 5;
-            context.lineCap = 'round'
-            context.moveTo(x1, y1);
-            context.lineTo(x2, y2);
-            context.stroke();
-            context.closePath();
+            if (from_server && color === 'erase') {
+                context.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            else {
+                context.beginPath();
+                context.strokeStyle = color;
+                context.lineWidth = 5;
+                context.lineCap = 'round'
+                context.moveTo(x1, y1);
+                context.lineTo(x2, y2);
+                context.stroke();
+                context.closePath();
+            }
         }
     }
 }
 
 let selected_color = 'black';
+let previous_color = 'black';
 function selectColor(color) {
-    document.getElementsByClassName(selected_color)[0].classList.remove('selected');
-    document.getElementsByClassName(color)[0].classList.add('selected');
-    selected_color = color;
+    if (color === 'borrar') {
+        document.getElementsByClassName('lapiz')[0].classList.remove('selected');
+        document.getElementsByClassName('colores')[0].classList.remove('selected');
+        document.getElementsByClassName('borrar')[0].classList.add('selected');
+    } else {
+        //if (color === 'lapiz') {
+        document.getElementsByClassName('lapiz')[0].classList.add('selected');
+        document.getElementsByClassName('colores')[0].classList.remove('selected');
+        document.getElementsByClassName('borrar')[0].classList.remove('selected');
+        //}
+    }
+    if (color === 'borrar' && selected_color === 'borrar') {
+        selected_color = color;
+    } else {
+        if (color === 'borrar') {
+            previous_color = selected_color;
+            selected_color = color;
+        } else {
+            if (selected_color === 'borrar' && color === 'lapiz') {
+                selected_color = previous_color;
+            } else {
+                /*if (selected_color === 'borrar') {
+                    previous_color = color;
+                } else {*/
+                selected_color = color;
+                //}
+            }
+        }
+    }
+    const colorGrid = document.querySelector('.color-grid');
+    if (colorGrid) {
+        colorGrid.remove();
+    }
+    const selectColorButton = document.querySelector('.color-square');
+    selectColorButton.style.backgroundColor = '';
+    if (selected_color !== 'borrar') {
+        selectColorButton.style.backgroundColor = selected_color;
+    } else {
+        selectColorButton.style.backgroundColor = previous_color;
+    }
+    //}
 }
 
+function openColorGrid() {
+    // Create a new div element for the color grid
+    const colorGrid = document.createElement('div');
+    colorGrid.classList.add('color-grid');
+    // Define an array of colors you want in the grid
+    const colors = ['red', 'green', 'blue', 'yellow', 'purple', 'orange', 'black', 'brown'];
+    // Loop through the colors and create buttons for each color
+    colors.forEach((color) => {
+        const colorButton = document.createElement('button');
+        colorButton.classList.add('round-button', color);
+        colorButton.onclick = () => selectColor(color);
+        colorGrid.appendChild(colorButton);
+    });
+    // Append the color grid to the parent element (e.g., the body or any specific container)
+    document.body.appendChild(colorGrid);
+}
 
-
-
-/*
-
-document.body.addEventListener("touchstart", function (e) {
-    if (e.target == canvas) {
-        e.preventDefault();
-    }
-}, false);
-document.body.addEventListener("touchend", function (e) {
-    if (e.target == canvas) {
-        e.preventDefault();
-    }
-}, false);
-document.body.addEventListener("touchmove", function (e) {
-    if (e.target == canvas) {
-        e.preventDefault();
-    }
-}, false);
-*/
-
+function eraseEverything() {
+    // Clear the canvas
+    const canvas = document.getElementById('sheet');
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    var socket = io();
+    // Send the erase request to the server
+    x1 = 0;
+    y1 = 0;
+    x2 = 0;
+    y2 = 0;
+    color = 'erase';
+    socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color }));
+}

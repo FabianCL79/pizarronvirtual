@@ -2,7 +2,6 @@ body {
   /* padding: 10px; */
   font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
   /* background-color: #36454f; */
-
   color:black;
 }
 .flex-container{
@@ -24,12 +23,10 @@ body {
 .round-button:hover{
   opacity: 80%;
 }
-.black{
+.lapiz{
   border: 1px solid black;
 }
-.white{
-  /*background-color: white;
-  border: 1px solid white;*/
+.borrar{
   border: 1px solid black;
 }
 .blue{
@@ -37,6 +34,67 @@ body {
   border: 1px solid midnightblue;
 }
 .selected{
-  /*border: solid 3px white;*/
   border: solid 3px black;
+}
+.colores{
+  border: 1px solid black;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 26px);
+  grid-gap: 2px;
+  position: absolute;
+  top: 100px;
+  left: 100px;
+}
+
+.color-grid button {
+  width: 25px;
+  height: 25px;
+  border-radius: 15%;
+}
+
+/* Add specific colors for the buttons in the grid */
+.red {
+  background-color: red;
+}
+
+.green {
+  background-color: green;
+}
+
+.blue {
+  background-color: blue;
+}
+
+.yellow {
+  background-color: yellow;
+}
+
+.purple {
+  background-color: purple;
+}
+
+.orange {
+  background-color: orange;
+}
+
+.black {
+  background-color: black;
+}
+
+.brown {
+  background-color: brown;
+}
+/* Add more colors as needed */
+
+.color-square {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: inline-block;
+  margin-right: 1px;
+  vertical-align: middle;
+  background-color: black;
 }
