@@ -3,6 +3,7 @@ window.onload = function () {
     let isDrawing = false;
     let x = 0;
     let y = 0;
+    let width = 5;
 
     const canvas = document.getElementById('sheet');
     var context = canvas.getContext('2d');
@@ -75,14 +76,22 @@ window.onload = function () {
     var socket = io();
 
     socket.on('update_canvas', function (data) {
-        let { x1, y1, x2, y2, color } = JSON.parse(data);
-        drawLine(context, x1, y1, x2, y2, color, true);
+        let { x1, y1, x2, y2, color, width } = JSON.parse(data);
+        drawLine(context, x1, y1, x2, y2, color, true, width);
     });
 
-    function drawLine(context, x1, y1, x2, y2, color = selected_color, from_server = false) {
-        if (!from_server)
-            socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color }));
+    const lineWidthSlider = document.getElementById('lineWidthSlider');
+    lineWidthSlider.addEventListener('input', function () {
+        const lineWidth = this.value;
+        width = lineWidth;
+    });
 
+    function drawLine(context, x1, y1, x2, y2, color = selected_color, from_server = false, lineWidth = 5) {
+        if (!from_server) {
+            lineWidth = width;
+            socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color, width }));
+        }
+        //const lineWidth = 5;
         if (color === 'borrar') {
             context.clearRect(x1 - 5, y1 - 5, 15, 15);
         } else {
@@ -92,7 +101,7 @@ window.onload = function () {
             else {
                 context.beginPath();
                 context.strokeStyle = color;
-                context.lineWidth = 5;
+                context.lineWidth = lineWidth;
                 context.lineCap = 'round'
                 context.moveTo(x1, y1);
                 context.lineTo(x2, y2);
