@@ -93,7 +93,7 @@ window.onload = function () {
         }
         //const lineWidth = 5;
         if (color === 'borrar') {
-            context.clearRect(x1 - 5, y1 - 5, 15, 15);
+            context.clearRect(x1 - lineWidth, y1 - lineWidth, lineWidth * 3, lineWidth * 3);
         } else {
             if (from_server && color === 'erase') {
                 context.clearRect(0, 0, canvas.width, canvas.height);
