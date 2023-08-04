@@ -91,7 +91,7 @@ window.onload = function () {
             lineWidth = width;
             socket.emit('update_canvas', JSON.stringify({ x1, y1, x2, y2, color, width }));
         }
-        //const lineWidth = 5;
+
         if (color === 'borrar') {
             context.clearRect(x1 - lineWidth, y1 - lineWidth, lineWidth * 3, lineWidth * 3);
         } else {
