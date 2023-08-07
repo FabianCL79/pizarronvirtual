@@ -137,7 +137,7 @@ function selectColor(color) {
                 selected_color = previous_color;
             } else {
                 /*if (selected_color === 'borrar') {
-                    previous_color = color;
+                    previous_color = color; 
                 } else {*/
                 selected_color = color;
                 //}
