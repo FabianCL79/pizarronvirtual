@@ -16,43 +16,47 @@
         <% } else { %>
           
           <p id="welcomeMessage"></p>
-
           <div>
-            <div>
-              <canvas id="sheet" width="800" height="500"></canvas>
-            </div>
-          </div>
-
-          <div>
-            <input type="range" id="lineWidthSlider" min="1" max="15" value="5">
-          </div>
-  
-          <div>
-            <div>
-              <button class="round-button lapiz selected" onclick="selectColor('lapiz')">
-                Lapiz
-              </button>
-            </div>
-            <div>
-              <button class="round-button borrar" onclick="selectColor('borrar')">
-                Borrar
-              </button>
-            </div>
-          </div>
-
-          <div>
-            <button class="round-button colores" onclick="openColorGrid()">
-              Color
-            </button>
-            <span class="color-square"></span>
-          </div>
-          
-          <div>
-            <button class="round-button" onclick="eraseEverything()">
-              Borrar Todo
+            <button id="toggleWhiteboardButton" onclick="toggleWhiteboard()">
+              Pizarron
             </button>
           </div>
+          <div class="whiteboard hidden" id="whiteboardDiv">
+            <div>
+              <div>
+                <canvas id="sheet" width="800" height="500"></canvas>
+              </div>
+            </div>
+            <div>
+              <input type="range" id="lineWidthSlider" min="1" max="15" value="5">
+            </div>
+    
+            <div>
+              <div>
+                <button class="round-button lapiz selected" onclick="selectColor('lapiz')">
+                  Lapiz
+                </button>
+              </div>
+              <div>
+                <button class="round-button borrar" onclick="selectColor('borrar')">
+                  Borrar
+                </button>
+              </div>
+            </div>
 
+            <div>
+              <button class="round-button colores" onclick="openColorGrid()">
+                Color
+              </button>
+              <span class="color-square"></span>
+            </div>
+            
+            <div>
+              <button class="round-button" onclick="eraseEverything()">
+                Borrar Todo
+              </button>
+            </div>
+          </div>
           <!-- Add the logout button -->
           <form id="logoutForm" action="/logout" method="POST">
             <button class="round-button" type="submit">Salir</button>
@@ -75,5 +79,14 @@
           welcomeMessage.textContent = `${username}!`;
         }
       });
+      
+      function toggleWhiteboard() {
+        var whiteboardDiv = document.getElementById('whiteboardDiv');
+        if(whiteboardDiv.classList.contains("hidden")) {
+          whiteboardDiv.classList.remove("hidden");
+        } else {
+          whiteboardDiv.classList.add("hidden");
+        }
+      }
   </script>
 </html>
